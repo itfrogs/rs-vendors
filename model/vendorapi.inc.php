@@ -1,6 +1,5 @@
 <?php
 namespace vendors\Model;
-
 use vendors\Model\Orm\Vendor;
 
 /**
@@ -15,6 +14,16 @@ class VendorApi extends \RS\Module\AbstractModel\EntityList
             'multisite' => true,
             'nameField' => 'title',
         ));
+    }
+    
+    function getProductLinks($product_id)
+    {
+        //Загружаем список линков товара и поставщиков
+        return \rs\Orm\Request::make()
+                    ->from(new \vendors\Model\Orm\Link)
+                    ->where(array(
+                        'link_id' => $product_id
+                    ))->objects(null, 'vendor_id');
     }
     
 }

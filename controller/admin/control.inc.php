@@ -14,7 +14,7 @@ class Control extends \RS\Controller\Admin\Crud
     function __construct()
     {
         //Устанавливаем, с каким API будет работать CRUD контроллер
-        parent::__construct(new \vendors\Vendor\VendorApi());
+        parent::__construct(new \Vendors\Model\VendorApi());
     }
     
     function helperIndex()

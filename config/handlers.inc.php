@@ -21,18 +21,58 @@ class Handlers extends \RS\Event\HandlerAbstract
         $this
             ->bind('getroute')  //событие сбора маршрутов модулей
             ->bind('getmenus') //событие сбора пунктов меню для административной панели
-            ->bind('orm.init.catalog-product');
-            //->bind('orm.beforewrite.catalog-product');
+            ->bind('orm.init.catalog-product')
+            ->bind('orm.afterwrite.catalog-product');
     }
 
     public static function ormInitCatalogProduct(\Catalog\Model\Orm\Product $orm_product)
     {
         $orm_product->getPropertyIterator()->append(array(
                 t('Поставщики'),
-                'vendors' => new \RS\Orm\Type\ArrayList(array('template' => '%vendors%/tab_vendors.tpl')),
-                'vendorList' => VendorApi::staticSelectList(),
+                'vendors' => new \RS\Orm\Type\ArrayList(array(
+                    'template' => '%vendors%/tab_vendors.tpl',
+                    'vendorApi' => new VendorApi(),
+                )),                
             )
         );
+    }
+    
+    /**
+    * Событие вызывается, когда товар гарантировано был провалидирован и сохранен.
+    * 
+    * @param array $params
+    */
+    public static function ormAfterWriteCatalogProduct($params)
+    {
+        /**
+        * @var \Catalog\Model\Orm\Product
+        */
+        $product = $params['orm'];
+        $vendors = $product['vendors']; //Здесь будет массив, который пришел нам из POST
+        //Делаем с ним что угодно, сохраняем например.
+        
+        if ($product->isModified('vendors')) {
+            
+            //Пока игнорируем обновление, тупо пересоздаем линки
+            //Удаляем старые
+            \RS\Orm\Request::make()
+                ->delete()
+                ->from(new \Vendors\Model\Orm\Link())
+                ->where(array(
+                    'link_id' => $product['id']
+                ))->exec();
+                
+            //Создаем новые
+            foreach($vendors as $vendor_id => $vendor_link) {
+                if ($vendor_link['url'] != '') {
+                    $link = new \Vendors\Model\Orm\Link();
+                    $link['vendor_id'] = $vendor_id;
+                    $link['link_id'] = $product['id'];
+                    $link['url'] = $vendor_link['url'];
+                    $link->insert();
+                }
+            }
+        }
     }
 
     /**
