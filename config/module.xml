@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <defaultValues>
+        <name multilanguage="true">Поставщики</name>
+        <description multilanguage="true">После установки плагина в каждом товаре можно создать одну или несколько ссылок на поставщика. После оформления заказа покупателем, в администратор, при просмотре заказа, будет видеть эти ссылки для каждого товара, сможет перейти по ним и заказать этот товар у поставщика, если его нет в наличии. </description>
+        <version>1.0.0.0</version>
+        <author>ITFrogs</author>
+    </defaultValues>
+</config>
