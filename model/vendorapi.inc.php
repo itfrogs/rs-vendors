@@ -13,6 +13,7 @@ class VendorApi extends \RS\Module\AbstractModel\EntityList
     {
         parent::__construct(new Vendor(), array(
             'multisite' => true,
+            'nameField' => 'title',
         ));
     }
     

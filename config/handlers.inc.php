@@ -28,9 +28,11 @@ class Handlers extends \RS\Event\HandlerAbstract
     public static function ormInitCatalogProduct(\Catalog\Model\Orm\Product $orm_product)
     {
         $orm_product->getPropertyIterator()->append(array(
-            t('Поставщики'),
-            '_vendors_' => new \RS\Orm\Type\UserTemplate('%vendors%/tab_vendors.tpl')
-        ));
+                t('Поставщики'),
+                'vendors' => new \RS\Orm\Type\ArrayList(array('template' => '%vendors%/tab_vendors.tpl')),
+                'vendorList' => VendorApi::staticSelectList(),
+            )
+        );
     }
 
     /**
