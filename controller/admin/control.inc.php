@@ -5,7 +5,8 @@ use \RS\Html\Table\Type as TableType,
     \RS\Html\Toolbar\Button as ToolbarButton,
     \RS\Html\Filter,
     \RS\Html\Table;
-    
+use vendors\Model\VendorApi;
+
 /**
 * Контроллер Управление списком магазинов сети
 */
@@ -14,7 +15,7 @@ class Control extends \RS\Controller\Admin\Crud
     function __construct()
     {
         //Устанавливаем, с каким API будет работать CRUD контроллер
-        parent::__construct(new \Vendors\Model\VendorApi());
+        parent::__construct(new VendorApi());
     }
     
     function helperIndex()
